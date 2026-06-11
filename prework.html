@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>ODI Demo Builder: Pre-Read</title>
+<style>
+  @page { size: letter; margin: 56px 64px; }
+  * { box-sizing: border-box; }
+  body {
+    font-family: -apple-system, "Helvetica Neue", Arial, sans-serif;
+    color: #1c1c1e; font-size: 14px; line-height: 1.55; margin: 0;
+  }
+  h1 { font-size: 30px; font-weight: 700; margin: 0 0 4px; letter-spacing: -0.02em; }
+  h2 { font-size: 22px; font-weight: 700; margin: 0 0 18px; letter-spacing: -0.01em; }
+  h3 { font-size: 17px; font-weight: 700; margin: 30px 0 10px; padding-top: 18px; border-top: 1px solid #e5e5ea; }
+  h4 { font-size: 14px; font-weight: 700; margin: 18px 0 6px; }
+  p { margin: 0 0 12px; }
+  .lede { color: #3a3a3c; }
+  .rule { border: 0; border-top: 1px solid #e5e5ea; margin: 22px 0; }
+  .callout {
+    background: #f4f7ff; border: 1px solid #d6e0ff;
+    border-left: 4px solid #3b6dff; border-radius: 8px; padding: 14px 16px; margin: 16px 0;
+  }
+  .callout strong { color: #1f3fb0; }
+  .note {
+    background: #fff8ec; border: 1px solid #f0dcae; border-left: 4px solid #d9a334;
+    border-radius: 8px; padding: 14px 16px; margin: 16px 0;
+  }
+  pre {
+    background: #11141a; color: #e6e6e6; border-radius: 8px; padding: 14px 16px;
+    font-family: "SF Mono", Menlo, Consolas, monospace; font-size: 12.5px; line-height: 1.5;
+    overflow-x: auto; margin: 10px 0 14px; white-space: pre-wrap; word-break: break-word;
+  }
+  pre .c { color: #6f7d95; }
+  pre .g { color: #7ee0a2; }
+  code {
+    font-family: "SF Mono", Menlo, Consolas, monospace; font-size: 12.5px;
+    background: #eef0f3; border-radius: 4px; padding: 1px 5px;
+  }
+  .success { font-size: 13px; color: #3a3a3c; margin: 4px 0 6px; }
+  .success strong { color: #1c7c3a; }
+  ul, ol { margin: 6px 0 14px; padding-left: 22px; }
+  li { margin: 4px 0; }
+  .meta { color: #6c6c70; font-size: 13px; }
+  .footer { margin-top: 28px; padding-top: 14px; border-top: 1px solid #e5e5ea; font-style: italic; color: #6c6c70; font-size: 12.5px; }
+  .ascii { background: #11141a; color: #cdd6e6; }
+</style>
+</head>
+<body>
+
+<h1>Pre-Work Checklist</h1>
+<h2>ODI Demo Builder: Pre-Read</h2>
+<p class="meta"><strong>Attendees:</strong> Andy, Niraj &nbsp;&nbsp; <strong>Estimated time:</strong> 15&ndash;25 minutes &nbsp;&nbsp; Complete every step before the session starts.</p>
+
+<div class="note">
+  <strong>Heads up on the skill.</strong> Niraj noticed the <code>odi-demo-builder</code> skill never got passed along after we built it, so I have made it a public GitHub repo that installs itself. You no longer hunt for a file or guess at an install path. One clone and one script gets you the skill plus every other prerequisite, then it tells you exactly what is left. Details in step 2.
+</div>
+
+<hr class="rule">
+
+<h3>1. What You Will Build</h3>
+<p>The session produces a working Fivetran ODI demo end-to-end. SQL Server (CDC via Fivetran) lands in an MDLS-managed Iceberg layer on S3 (cataloged by AWS Glue). dbt transforms that data through bronze, silver, and gold layers into Snowflake or Athena. A React frontend surfaces the results as a customer-facing demo application.</p>
+<p>The full pipeline runs with real connectors, real infrastructure, and real data, not mocked output.</p>
+<pre class="ascii">SQL Server (CDC)
+      &rarr;
+   Fivetran
+      &rarr;
+ MDLS / Iceberg  (S3 + Glue Catalog)
+      &rarr;
+   dbt  (bronze &rarr; silver &rarr; gold)
+      &rarr;
+ Snowflake / Athena
+      &rarr;
+   React Demo App</pre>
+
+<hr class="rule">
+
+<h3>2. Setup &mdash; the easy path</h3>
+<p>Everything you need is in one public repo. Open Terminal and run these three lines:</p>
+<pre><span class="c"># clone the repo, then run the setup script</span>
+git clone https://github.com/fivetran-jasonchletsos/odi-demo-builder.git
+cd odi-demo-builder
+./setup.sh</pre>
+
+<p><code>setup.sh</code> auto-installs every Homebrew-based tool (Claude Code, git, GitHub CLI, 1Password CLI, Terraform, AWS CLI, Node 20, dbt), installs the demo skill in the exact layout Claude Code expects, then runs a preflight check and prints precisely what is left for you to do. It is safe to run more than once.</p>
+
+<div class="callout">
+  <strong>What it cannot do for you.</strong> A few steps need your own credentials and must be done by hand. The setup script lists each one with the exact command. They are: <code>claude login</code>, <code>gh auth login</code>, <code>op signin</code>, <code>aws configure</code>, your git name and email, and your Fivetran API key. See step 3.
+</div>
+
+<h4>Confirm you are ready</h4>
+<p>At any time, run the read-only preflight check. It changes nothing and reports the status of every prerequisite, with a copy-and-paste fix for anything missing:</p>
+<pre>./preflight.sh</pre>
+<p class="success"><strong>Success looks like:</strong> the final line reads <em>All set. You are ready for the session.</em> If anything is marked to fix, run the command it shows you, then run <code>./preflight.sh</code> again.</p>
+
+<h4>Make the skill load</h4>
+<p>Claude Code discovers skills at startup, so after setup, quit and reopen Claude Code. Then confirm the skill is live by running:</p>
+<pre>./preflight.sh</pre>
+<p class="success">The skill line will read <strong>PASS</strong>, and typing <code>/odi-demo-builder</code> inside a Claude Code session will resolve.</p>
+
+<hr class="rule">
+
+<h3>3. The six credential steps</h3>
+<p>Run each one. The setup script prints these too, so you can copy them from your terminal.</p>
+
+<h4>a. Claude Code login</h4>
+<pre>claude login</pre>
+<p class="success">Follow the browser prompt. <strong>Success:</strong> your Anthropic email shows when you run <code>claude whoami</code>.</p>
+
+<h4>b. GitHub CLI</h4>
+<pre>gh auth login</pre>
+<p class="success">Choose GitHub.com, HTTPS, and authenticate in the browser. <strong>Success:</strong> <code>gh auth status</code> says you are logged in.</p>
+
+<h4>c. 1Password CLI</h4>
+<pre>op signin</pre>
+<p class="success">Enter your 1Password account URL and credentials when prompted. <strong>Success:</strong> <code>op whoami</code> prints your account email.</p>
+
+<h4>d. AWS CLI</h4>
+<pre>aws configure</pre>
+<p class="success">Provide your Access Key ID, Secret Access Key, default region (<code>us-east-1</code> or your team standard), and output format <code>json</code>. <strong>Success:</strong> <code>aws sts get-caller-identity</code> returns your account.</p>
+
+<h4>e. Git identity</h4>
+<pre>git config --global user.name "Your Name"
+git config --global user.email "you@fivetran.com"</pre>
+<p class="success"><strong>Success:</strong> <code>git config --global user.email</code> prints your email.</p>
+
+<h4>f. Fivetran API key</h4>
+<p>Get it from fivetran.com, click your avatar (top right), then API key. Copy the key and secret. Add them to <code>~/.zshrc</code>:</p>
+<pre>export FIVETRAN_API_KEY="your_key_here"
+export FIVETRAN_API_SECRET="your_secret_here"</pre>
+<p>Then reload your shell:</p>
+<pre>source ~/.zshrc</pre>
+<p class="success"><strong>Success:</strong> the Fivetran line in <code>./preflight.sh</code> reads PASS.</p>
+
+<hr class="rule">
+
+<h3>4. If something goes wrong</h3>
+<p>Run <code>./preflight.sh</code>. Every failing item prints the exact command to fix it. If you are still stuck, copy the full preflight output and paste it in the shared Slack channel before the session. Do not wait until the session starts to sort out a broken tool.</p>
+
+<hr class="rule">
+
+<h3>5. What to Expect in the Session</h3>
+<p>The session runs in four phases. Each builds directly on the last.</p>
+<ul>
+  <li><strong>Phase 1: Gather.</strong> Claude Code interviews you about the customer scenario, connector topology, and destination. It produces a structured spec that drives the rest of the session.</li>
+  <li><strong>Phase 2: Provision.</strong> Terraform modules are generated and applied, creating the S3 bucket, Glue catalog database, IAM roles, and the Fivetran connector via the API. You review the plan before anything is applied.</li>
+  <li><strong>Phase 3: Build.</strong> dbt models (bronze, silver, gold) and the React frontend are scaffolded and wired to your provisioned infrastructure. You validate model grain and business logic at each layer.</li>
+  <li><strong>Phase 4: Run.</strong> The end-to-end pipeline executes: Fivetran syncs, dbt transforms, the React app loads. You confirm the demo is presentable and tag a release commit.</li>
+</ul>
+
+<hr class="rule">
+
+<h3>6. A Note for Andy</h3>
+<p>The SQL Server to MDLS leg of this pipeline is the HVR replacement pitch. You already know the architecture better than Claude Code does, and the builder knows this and will defer to you at a specific decision point.</p>
+<p>During the Gather phase, Claude Code will ask you to choose between CDC (log-based) and XACT (transaction-based) replication for the SQL Server connector. It surfaces both options but waits for your call. Make the choice you would make for a data-residency-sensitive enterprise customer, because that is the next thing it shows you: the Hybrid deployment option appears immediately after, with the agent explaining why it is the right fit for customers who cannot send CDC log data outside their firewall.</p>
+<p>This is intentional. The demo is structured so that your expertise drives the narrative, not a preset script. Pay attention to how the builder surfaces the Hybrid option. That framing is what you would use with a CDO who is replacing HVR and nervous about cloud egress.</p>
+
+<p class="footer">Prepared for the ODI Demo Builder session. Complete all prerequisites before the session begins. Skill repo: github.com/fivetran-jasonchletsos/odi-demo-builder</p>
+
+</body>
+</html>
