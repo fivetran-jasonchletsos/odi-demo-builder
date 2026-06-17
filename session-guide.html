@@ -17,6 +17,7 @@
   .share { background: #fff7ed; border: 1px solid #fed7aa; border-left: 4px solid #ea580c; border-radius: 5px; padding: 10px 14px; margin: 8px 0; font-size: 12.5px; }
   .issue { background: #fdf4ff; border: 1px solid #e9d5ff; border-left: 4px solid #9333ea; border-radius: 5px; padding: 10px 14px; margin: 8px 0; font-size: 12.5px; }
   .issue strong { color: #581c87; }
+  .warn { background: #fffbec; border: 1px solid #f0dcae; border-left: 4px solid #d9a334; border-radius: 5px; padding: 10px 14px; margin: 8px 0; font-size: 12.5px; }
   p { margin-bottom: 8px; }
   pre { background: #0f1117; color: #e2e8f0; border-radius: 5px; padding: 11px 14px; font-family: "SF Mono", Menlo, Consolas, monospace; font-size: 11px; line-height: 1.5; margin: 6px 0 10px; white-space: pre-wrap; word-break: break-word; }
   .prompt { background: #0f1117; color: #e2e8f0; border-radius: 5px; border: 2px solid #FF3621; padding: 13px 15px; margin: 8px 0 12px; font-family: "SF Mono", Menlo, Consolas, monospace; font-size: 11px; line-height: 1.6; white-space: pre-wrap; word-break: break-word; }
@@ -27,7 +28,6 @@
   .ok { font-size: 12px; color: #166534; background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 4px; padding: 4px 10px; margin: 4px 0 8px; }
   .phase-badge { display: inline-block; background: #FF3621; color: #fff; font-size: 11px; font-weight: 700; letter-spacing: .06em; padding: 2px 9px; border-radius: 3px; margin-bottom: 10px; }
   .timing { font-size: 11.5px; color: #6b7280; font-style: italic; float: right; margin-top: 2px; }
-  .step { font-size: 11px; font-weight: 700; background: #111; color: #fff; border-radius: 3px; padding: 1px 6px; margin-right: 4px; }
   .footer { margin-top: 16px; padding-top: 10px; border-top: 1px solid #e5e5e5; font-size: 10.5px; color: #888; display: flex; justify-content: space-between; }
   table.prereq { width: 100%; border-collapse: collapse; font-size: 12px; margin: 8px 0; }
   table.prereq th { text-align: left; font-size: 10px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: #888; padding: 0 8px 6px 0; border-bottom: 1px solid #e5e5e5; }
@@ -41,32 +41,47 @@
 <div class="meta">Both of you run this simultaneously &nbsp;·&nbsp; One person shares screen on the Meet so you both see results &nbsp;·&nbsp; ~3 hours &nbsp;·&nbsp; No skill install required — paste prompts directly into Claude Code</div>
 
 <div class="howto">
-  <strong>How this works.</strong> Each phase has a prompt in a red-bordered box. Both of you paste it into your own Claude Code session at the same time. One of you shares your screen so you can compare what Claude Code produces and talk through it. When Claude Code asks a question, answer it together. When something breaks, tell Claude Code exactly what happened and ask it to fix the issue — that is the right approach for every error you hit in this session.
+  <strong>How this works.</strong> Each phase has a prompt in a red-bordered box. Both of you paste it into your own Claude Code session at the same time. One of you shares your screen so you can compare outputs and talk through it. When Claude Code asks a question, the screen-sharer answers; the other person types the same answer into their own session. When something breaks, tell Claude Code exactly what happened and ask it to fix the issue — that is the right approach for every error in this session. <strong>Keep the same Claude Code session open for all four phases.</strong> Do not close or restart it between phases — the later prompts rely on context from earlier ones.
 </div>
 
 <!-- ═══════════════════════════════════════════ -->
 <h2>Before you start <span class="timing">5 minutes</span></h2>
 
-<div class="both">Both of you — run this verification block before touching Claude Code. Every line should return output, not an error.
+<div class="both">Both of you — open a terminal in the directory where you want the demo project created. Run <code>claude</code> from there. Every file Claude Code generates lands relative to that directory. Keep that terminal open for the full session.</div>
+
+<div class="both">Both of you — run this full verification block before touching Claude Code. Every command should return output, not an error.
 <pre>claude whoami
 op whoami
+terraform version
+dbt --version
+node --version
+npm --version
+jq --version
 aws sts get-caller-identity --query Account --output text
 echo "Fivetran key: ${FIVETRAN_API_KEY:0:8}..."
 echo "Fivetran secret: ${FIVETRAN_API_SECRET:0:8}..."</pre>
-If anything fails, paste the error into the Meet chat and ask Claude Code: "This command failed — how do I fix it?" Claude Code will give you the exact steps.
+If anything fails, paste the error into the Meet chat and ask Claude Code: "This command failed — how do I fix it?"
 </div>
 
-<div class="share">One of you — share your screen on the Meet now. The person who shares screen is the reference point. When your outputs differ, the shared screen is what you discuss. Either person can share; just pick one and keep it consistent through the session.</div>
+<div class="share">One of you — share your screen on the Meet now. Keep the same person sharing for the full session. When your outputs differ, the shared screen is the reference.</div>
 
-<div class="both">Both of you — agree on these before pasting any phase prompt:
+<div class="both">Both of you — agree on these three things before pasting any prompt. Write them down or paste into the Meet chat so you both have them.
 <ol>
-  <li><strong>Industry vertical and fictional company name</strong> — the name must not be a real company. Claude Code will validate it.</li>
+  <li><strong>Industry vertical and fictional company name.</strong> The name must not be a real company. Examples that work: Aldermoor Systems, Crestfield Analytics, Vantage Meridian. Claude Code will validate your choice.</li>
   <li><strong>Buyer persona</strong> — CDO, CIO, or Head of Data Engineering. This shapes the frontend copy.</li>
-  <li><strong>The exact 1Password item name for the SQL Server credentials</strong> — Claude Code will use <code>op read</code> to fetch host, port, username, password from it.</li>
+  <li><strong>Your 1Password vault name and item name</strong> for the SQL Server credentials. Claude Code will use these to construct <code>op://vault/item/field</code> URIs — you need both the vault name and the item name, not just the item name.</li>
 </ol>
 </div>
 
-<div class="issue"><strong>When something breaks, do this:</strong> Paste the full error output into Claude Code and say "this failed — what is the fix?" Do not try to solve errors by editing files or commands yourself before asking Claude Code. Claude Code has full context of what it built and can diagnose faster than manual investigation. This is true for every error in every phase.</div>
+<div class="issue"><strong>When something breaks, do this every time:</strong>
+<ol>
+  <li>Do not try to fix the error by editing files or rerunning commands yourself first.</li>
+  <li>Copy the full error output — the complete text, not just the last line.</li>
+  <li>Paste it into Claude Code and say: <strong>"This failed. Here is the error. What is the fix?"</strong></li>
+  <li>Claude Code will diagnose it and give you the exact steps.</li>
+</ol>
+If Claude Code cannot resolve the error within 15 minutes, the issue is likely outside your control (firewall, missing IAM permissions, disabled CDC on the SQL Server). Pause and escalate to whoever administers that system before continuing.
+</div>
 
 <!-- ═══════════════════════════════════════════ -->
 <h2>Phase 1 — Gather <span class="timing">target: 15 minutes</span></h2>
@@ -79,135 +94,182 @@ If anything fails, paste the error into the Meet chat and ask Claude Code: "This
 Narrate your reasoning at every decision point.
 
 Start by collecting five inputs:
-1. Industry vertical and fictional company name — validate that the name does not collide with a real entity before proceeding
+1. Industry vertical and fictional company name — validate that the name does not collide with a real entity before proceeding. Check your training knowledge for any registered business, publicly traded company, or well-known brand with that exact name. Reject it if you find any match.
 2. Buyer persona: CDO, CIO, or Head of Data Engineering
-3. The 1Password item name for SQL Server credentials — you will fetch host, port, username, and password using op read
+3. The 1Password vault name AND item name for SQL Server credentials — ask for both separately. Construct four op read URIs in the format op://vault-name/item-name/field-name for host, port, username, and password (standard 1Password field names are "server", "port", "username", "password"). Run each as: export FIELD=$(op read "op://vault-name/item-name/field-name"). Never prompt for credentials in plaintext.
 4. AWS region (default us-east-1) and S3 bucket name prefix
 5. Target database and table selection — list these after connectivity is confirmed
 
 Ask for all five now. Do not start any infrastructure work until you have them.</div>
 
-<p>Answer Claude Code's questions. When it asks for the 1Password item name, give it the exact name from your vault. Claude Code will run <code>op read</code> to pull credentials — nothing gets pasted in plaintext.</p>
+<p>Answer Claude Code's questions. For 1Password, give both your vault name and item name when asked — it will construct the op:// URIs itself.</p>
 
-<div class="both">When Claude Code asks about the update method, it will present two options: CDC (log-based, requires SQL Server Agent and VIEW SERVER STATE permission) and full reload. Choose the one that fits the SQL Server environment you are working with. Claude Code will confirm what it needs from the server for whichever you pick.</div>
+<div class="both">When Claude Code asks about the update method, it will present three options: XACT (transaction-based log reading, no SQL Server Agent required — recommended), LOG_BASED (uses SQL Server replication, more setup required), or RELOAD (full table scan, no special permissions). If you do not administer the SQL Server and cannot confirm CDC is enabled, choose RELOAD — you can change it in the Fivetran dashboard later. To verify CDC readiness before choosing XACT, run on the SQL Server: <code>SELECT name, is_cdc_enabled FROM sys.databases WHERE name = 'your_db'</code>.</div>
 
 <div class="ok">Phase 1 done when: connectivity confirmed, tables selected, update method decided.</div>
 
+<div class="warn"><strong>Keep this Claude Code session open.</strong> Do not close or restart it. Phase 2, 3, and 4 all reference values Claude Code collected here. If you restart, paste the Phase 1 prompt again and re-answer the questions before continuing.</div>
+
 <!-- ═══════════════════════════════════════════ -->
-<h2>Phase 2 — Provision <span class="timing">target: 45 minutes</span></h2>
+<h2>Phase 2 — Provision <span class="timing">target: 60 minutes</span></h2>
 <div class="phase-badge">PHASE 2 — PROVISION</div>
 
-<div class="share">Before pasting the Phase 2 prompt, the person sharing screen: go to fivetran.com, start creating a new destination, choose Managed Data Lake (MDLS). It shows two values — a Fivetran AWS account ID and an External ID. Share those values with each other. Both of you will need them for Terraform.</div>
+<div class="share">Before pasting the Phase 2 prompt, the person sharing screen: go to fivetran.com and start creating a new MDLS destination. Work through the wizard until you see both values: the <strong>Fivetran AWS account ID</strong> and the <strong>External ID</strong>. The External ID appears mid-wizard after you name the destination — not on the first screen. Copy both values and share them in the Meet chat. Both of you need them for Terraform.</div>
 
-<div class="prompt">Phase 1 is complete. Run Phase 2: Provision.
+<div class="prompt">This continues the Phase 1 conversation. Use the demo slug, company name, SQL Server credentials, update method, AWS region, and S3 bucket prefix already established above.
 
-In order:
-1. Create the project directory at /Users/[your-username]/Documents/GitHub/[DEMO_SLUG]-odi-demo/infra/ and initialize a git repo
-2. Write main.tf with: S3 bucket (versioning enabled, AES256 encryption, public access blocked, 30-day lifecycle to STANDARD_IA), three Glue databases (bronze, silver, gold), IAM role for Fivetran MDLS with trust policy using fivetran_aws_account_id and fivetran_external_id as variables, Athena workgroup, and outputs for bucket_name, fivetran_role_arn, bronze_db, silver_db, gold_db
-3. Write terraform.tfvars with placeholders for the two Fivetran values. Pause and ask me to fill them in before running apply
-4. After I confirm the values are in tfvars, run terraform init and terraform plan. Print the plan and wait for my approval before applying
-5. Run terraform apply after I approve. Capture outputs into environment variables
-6. Create the Fivetran MDLS destination via POST https://api.fivetran.com/v1/destinations using FIVETRAN_API_KEY and FIVETRAN_API_SECRET
-7. Create the SQL Server connector via POST https://api.fivetran.com/v1/connectors using the 1Password credentials and the update method from Phase 1. Print and store the connector ID and deep link URL
-8. Test the connector: POST /v1/connectors/[ID]/test. Confirm setup_state is CONNECTED before moving to Phase 3
+Run Phase 2: Provision. In order:
 
-Show me the Terraform plan before applying. Do not create the connector until the destination is confirmed.</div>
+1. Run echo $HOME to get the home directory. Use the demo slug from Phase 1 to construct the full project path as $HOME/Documents/GitHub/{demo_slug}-odi-demo/infra/ — resolve both values from Phase 1 context before creating the directory. Initialize a git repo there.
 
-<p>Claude Code will pause twice and wait for your input: once when tfvars needs the Fivetran values, and once when it shows you the Terraform plan. Review the plan — you should see an S3 bucket, three Glue databases, an IAM role, and an Athena workgroup. Tell Claude Code "approved, apply it" when you are ready.</p>
+2. Write main.tf with: S3 bucket (versioning enabled, AES256 encryption, public access blocked, 30-day lifecycle to STANDARD_IA scoped to the data/ prefix only), three Glue databases ({demo_slug}_bronze, {demo_slug}_silver, {demo_slug}_gold), IAM role for Fivetran MDLS with trust policy using fivetran_aws_account_id and fivetran_external_id as variables, Athena workgroup, and Terraform outputs for bucket_name, fivetran_role_arn, bronze_db, silver_db, gold_db.
 
-<div class="ok">Phase 2 done when: Terraform applied, MDLS destination created, SQL Server connector CONNECTED.</div>
+3. Write terraform.tfvars with placeholders for fivetran_aws_account_id and fivetran_external_id. Pause and ask me to fill in the two real values from the Fivetran MDLS setup wizard before running anything.
 
-<div class="issue"><strong>If the connector test returns INCOMPLETE:</strong> Paste the full error text to Claude Code and ask it to diagnose. It will tell you exactly what is wrong and how to fix it.</div>
+4. After I confirm the real values are in tfvars: run terraform init, then terraform plan. Print the plan and wait for my explicit approval before applying.
+
+5. Run terraform apply after I approve. Run terraform output -json and save the full result to infra/outputs.json. Print each output value on a labeled line.
+
+5a. Create the Fivetran group: POST https://api.fivetran.com/v1/groups with body {"name": "{demo_slug}"} using FIVETRAN_API_KEY and FIVETRAN_API_SECRET from the environment. Capture the returned id field. Print it as: GROUP_ID: <value>
+
+6. Create the Fivetran MDLS destination: POST https://api.fivetran.com/v1/destinations with body {"group_id": GROUP_ID, "service": "managed_datalake", "config": {"bucket": bucket_name, "region": aws_region, "role_arn": fivetran_role_arn, "external_id": fivetran_external_id}} — substitute all values from Terraform outputs and Phase 1.
+
+7. Create the SQL Server connector: POST https://api.fivetran.com/v1/connectors with the 1Password credentials and the update method from Phase 1. Use the GROUP_ID from step 5a as the group_id. Construct the deep link as https://fivetran.com/dashboard/connectors/{connector_id} and print both on labeled lines: CONNECTOR_ID: <value> and DEEP_LINK: <value>. Store both in infra/outputs.json.
+
+8. Before surfacing the Hybrid Deployment aside: give a 3-sentence explanation of Fivetran Hybrid Deployment — how it keeps customer data inside the customer network, what metadata the Fivetran cloud plane receives, and why the architecture built today works identically with a Hybrid Agent in front.
+
+9. Test the connector: POST https://api.fivetran.com/v1/connectors/{connector_id}/test. Confirm setup_state equals "connected" (lowercase) before reporting Phase 2 complete. If setup_state is not "connected", print the full response and stop.
+
+Show the Terraform plan before applying. Do not create the connector until the destination is confirmed.</div>
+
+<p>Claude Code pauses twice: once for the Fivetran tfvars values, and once for the Terraform plan. Review the plan — you should see an S3 bucket, three Glue databases, an IAM role, and an Athena workgroup. Tell Claude Code "approved, apply it" when ready.</p>
+
+<div class="ok">Phase 2 done when: Terraform applied, outputs.json written, MDLS destination created, SQL Server connector status equals "connected".</div>
+
+<div class="issue"><strong>If the connector test does not return "connected":</strong> Paste the full JSON response to Claude Code and ask it to diagnose. It will tell you exactly what is wrong and how to fix it.</div>
+
+<div class="both"><strong>Sync gate — both confirm before proceeding.</strong> Confirm in the Meet chat that your connector shows "connected" before either of you pastes the Phase 3 prompt. If your partner is still in Phase 2, wait.</div>
 
 <!-- ═══════════════════════════════════════════ -->
 <h2>Phase 3 — Build <span class="timing">target: 60 minutes</span></h2>
 <div class="phase-badge">PHASE 3 — BUILD</div>
 
-<div class="prompt">Phase 2 is complete. Run Phase 3: Build.
+<div class="prompt">This continues the Phase 1 and Phase 2 conversation. Use the demo slug, company name, connector ID, S3 bucket name, and Glue database names already established above. Read infra/outputs.json if you need to recover any Terraform output values.
+
+Run Phase 3: Build.
 
 In order:
-1. Scaffold the dbt project in [DEMO_DIR]/dbt/: directories models/bronze, models/silver, models/gold, seeds, macros, tests
-2. Write dbt_project.yml: project name from demo slug, Athena profile, silver materialized as views, gold as Iceberg tables (parquet, partitioned), store_failures enabled
-3. Write packages.yml with dbt_utils and dbt_expectations
-4. Write profiles.yml using environment variables for all connection details — nothing hardcoded. Use awsdatacatalog as the database value
-5. Generate sources.yml in models/bronze/ for every table from Phase 1. Each table gets a _fivetran_synced not_null test and a _fivetran_deleted column documented
-6. For each source table: ask me for the primary key column, date columns, and metric/amount columns, then generate a staging model in models/silver/ using the standard source → renamed CTE pattern
-7. Ask me to identify the main dimension entity and main fact grain, then generate at least one gold dim model and one gold fct model using Iceberg materialization
+1. Scaffold the dbt project in the project directory created in Phase 2 — resolve it as $HOME/Documents/GitHub/{demo_slug}-odi-demo/dbt/ using the demo slug from Phase 1. Create directories: models/bronze, models/silver, models/gold, seeds, macros, tests.
+
+2. Write dbt_project.yml: project name from demo slug, Athena profile, bronze materialized as views, silver materialized as views, gold materialized as Iceberg tables using config(materialized="table", table_type="iceberg", s3_data_dir="s3://{bucket}/gold/", s3_tmp_table_dir="s3://{bucket}/tmp/") — table_type="iceberg" is required by dbt-athena, not optional.
+
+3. Write packages.yml: [{package: "dbt-labs/dbt_utils", version: [">=1.0.0"]}, {package: "calogica/dbt_expectations", version: [">=0.10.0"]}]
+
+4. Write profiles.yml using environment variables for all connection details — nothing hardcoded. Use the dbt-athena-community adapter (type: athena). Required fields: region_name, s3_staging_dir (s3://{bucket}/athena-results/), s3_data_dir (s3://{bucket}/dbt/), database: awsdatacatalog, schema: {demo_slug}_bronze, work_group: {demo_slug}.
+
+5. Generate sources.yml in models/bronze/ for every table from Phase 1. Each table gets: loaded_at_field: _fivetran_synced, freshness warn_after 1 hour error_after 4 hours, a _fivetran_synced not_null test, and a _fivetran_deleted column documented.
+
+6. For each source table: ask me for the primary key column, date columns, and metric/amount columns, then generate a staging model in models/silver/ using the standard source → renamed CTE pattern. Use try_cast instead of cast for numeric columns to handle dirty data gracefully.
+
+7. Ask me to identify the main dimension entity and main fact grain, then generate at least one gold dim model and one gold fct model using Iceberg materialization.
+
 8. Apply content rules to everything generated:
-   - No raw table or schema names in any string that renders in the UI
+   - No raw table or schema names in any string that renders in the UI — create a display-names constants file mapping real names to fictional labels; the UI imports from it
    - Fictional org name used consistently in all copy
    - pipeline.json must include connector ID and full deep link URL for every connector
-9. Generate the React frontend shell: App.tsx with HashRouter, Landing page with org name and buyer-persona copy, Pipeline page with connector cards that include working Open-in-Fivetran links, Analysis page with a Recharts chart placeholder
-10. Run: dbt deps && dbt seed && dbt build --select bronze silver gold
-11. Report results. If anything fails, paste the error and diagnose before suggesting a fix
 
-Ask me about primary keys and grain before writing any SQL. Show me the model file list before running the build.</div>
+9. Generate the React frontend shell using: npm create vite@latest frontend -- --template react-ts (do not use create-react-app — it prompts interactively). Then build: App.tsx with HashRouter, Landing page with org name and buyer-persona copy, Pipeline page with connector cards that include working Open-in-Fivetran links, Analysis page with a Recharts chart that shows axis labels, a chart title using the fictional org name, and a note that live data populates after gold models complete.
 
-<p>Claude Code will ask you questions about column structure before generating SQL. Answer them — this is where your knowledge of the source data matters. When it shows you the list of model files it plans to create, review it before telling it to proceed.</p>
+10. Validate the dbt project without running any queries against Athena: run dbt deps && dbt compile && dbt ls --select "path:models/silver path:models/gold". This confirms syntax and model structure without requiring source data. The full dbt build runs in Phase 4 after the first sync completes.
 
-<div class="both">When Claude Code applies the content rules, both of you review the output together on the shared screen. Three things to confirm: no raw schema or table names visible in any UI string, the fictional company name is consistent everywhere, and each connector entry in pipeline.json has a <code>deep_link</code> field with a real fivetran.com URL.</div>
+11. Report compile and ls results. If anything fails, paste the error and diagnose before suggesting a fix.
 
-<div class="ok">Phase 3 done when: dbt build passes, React shell generated, content rules confirmed.</div>
+Ask me about primary keys and grain before writing any SQL. If you have more than 4 source tables, start with the 3 most important and stub the rest as pass-through staging models. Show me the model file list before running the compile.</div>
+
+<p>Claude Code will ask about column structure before generating SQL. Answer based on your knowledge of the source data. If you have many tables, narrow to 3-4 before starting Phase 3 to keep this phase within the time target.</p>
+
+<div class="both">When Claude Code applies the content rules, both of you review on the shared screen: no raw schema or table names in any UI string, fictional company name consistent, pipeline.json has a real fivetran.com <code>deep_link</code>.</div>
+
+<div class="ok">Phase 3 done when: dbt compile and dbt ls pass, React shell generated, content rules confirmed.</div>
 
 <!-- ═══════════════════════════════════════════ -->
 <h2>Phase 4 — Run <span class="timing">target: 30 minutes</span></h2>
 <div class="phase-badge">PHASE 4 — RUN</div>
 
-<div class="prompt">Phase 3 is complete. Run Phase 4: Run.
+<div class="share">Before pasting the Phase 4 prompt — open a second terminal tab. Navigate to your demo frontend directory ($HOME/Documents/GitHub/{demo_slug}-odi-demo/frontend/) and run: <code>npm install &amp;&amp; npm run dev</code>. The app will be available at http://localhost:5173. Keep this terminal running for the entire demo tour.</div>
+
+<div class="prompt">This continues the Phase 1, 2, and 3 conversation. Recover the connector ID and bucket name from infra/outputs.json if needed.
+
+Run Phase 4: Run.
 
 In order:
-1. Trigger the first Fivetran sync: POST /v1/connectors/[CONNECTOR_ID]/sync
-2. Poll sync status every 30 seconds and print each update until sync_state is SYNCED or ERROR
-3. If ERROR, print the Fivetran error message and stop — do not run dbt on errored data
-4. When SYNCED, verify data in Iceberg: list S3 objects in the bronze prefix for metadata.json files, then run Athena COUNT(*) on each source table and print row counts
-5. Run dbt build --select silver gold against the synced data
-6. Walk through the demo tour:
+1. Retrieve the connector ID from infra/outputs.json or from the CONNECTOR_ID value printed at the end of Phase 2. Trigger the first Fivetran sync: POST https://api.fivetran.com/v1/connectors/{connector_id}/force using FIVETRAN_API_KEY and FIVETRAN_API_SECRET.
+
+2. Write a file sync_poll.sh with this content and run it in a separate note — instruct the participant to run it in a second terminal tab:
+   while true; do
+     STATUS=$(curl -s -u "${FIVETRAN_API_KEY}:${FIVETRAN_API_SECRET}" https://api.fivetran.com/v1/connectors/{connector_id} | jq -r '.data.status.sync_state')
+     echo "$(date): $STATUS"
+     [[ "$STATUS" == "synced" || "$STATUS" == "failed" ]] && break
+     sleep 30
+   done
+   Tell the participant: run bash sync_poll.sh in a second terminal tab and leave it running. This Claude Code session is available for review work while the sync runs.
+
+3. If sync_poll.sh exits with "failed": print the Fivetran error and stop. Do not run dbt on failed data.
+
+4. When sync_poll.sh exits with "synced": verify data landed in S3. For each source table, list s3://{bucket}/{demo_slug}_bronze/{table_name}/metadata/ and confirm at least one .json file exists. Then run Athena COUNT(*) on each bronze table and print row counts.
+
+5. Run: dbt build --select "path:models/silver path:models/gold" against the synced data. Report all results.
+
+6. Walk through the demo tour with the React app running at http://localhost:5173:
    - Landing page: org name visible, no raw table names, buyer persona copy correct
-   - Pipeline page: SQL Server connector card visible, Open-in-Fivetran link opens the correct connector
-   - Fivetran dashboard at the connector deep link: confirm SYNCED status
+   - Pipeline page: SQL Server connector card visible, Open-in-Fivetran link opens the correct connector at fivetran.com
+   - Fivetran dashboard at the connector deep link: status shows "synced"
    - Athena: SELECT * LIMIT 5 on each gold table, confirm rows returned
-   - Analysis page: chart component renders
-7. Print the final build summary: demo slug, Fivetran group ID, connector ID and deep link, S3 bucket, Glue database names, dbt project name, update method, sync status, count of gold models built
-8. Print next steps: push repo to GitHub, add to demo catalog, run demo-blitz for a full content and design pass, add analytical charts once data volume warrants
+   - Analysis page at http://localhost:5173/#/analysis: axis labels visible, chart title shows fictional org name, live-data note visible
 
-Poll every 30 seconds. The first sync may take 5 to 30 minutes depending on table size.</div>
+7. Print the build summary: demo slug, Fivetran group ID, connector ID and deep link, S3 bucket name, Glue database names, dbt project name, update method, sync status, count of gold models built.
 
-<p>Use the sync wait time to review the dbt models and React frontend that Phase 3 generated. Claude Code will keep printing status updates in the background.</p>
+8. Print what you built: a live Fivetran pipeline landing SQL Server CDC data into Apache Iceberg on S3, dbt-transformed bronze/silver/gold layers queryable via Athena, and a React frontend ready to demo the full ODI story to a CDO or CIO.
 
-<div class="ok">Phase 4 done when: sync SYNCED, Athena row counts confirmed, dbt gold models populated, demo tour complete, summary printed.</div>
+9. Print next steps: push repo to fivetran-jasonchletsos GitHub org, add to demo catalog, run demo-blitz for a full content and design pass, add analytical charts once data volume warrants.</div>
+
+<p>While sync_poll.sh runs in the second terminal, use this time to review the dbt models and React frontend from Phase 3. Check: sources.yml table names match Phase 1, gold models use <code>table_type="iceberg"</code>, no hardcoded schema strings, company name renders in the React shell, connector card has a real fivetran.com URL. When sync completes, come back to Claude Code for the build and tour.</p>
+
+<div class="ok">Phase 4 done when: sync confirmed, Athena row counts printed, dbt gold models populated, demo tour complete, summary and next steps printed.</div>
 
 <!-- ═══════════════════════════════════════════ -->
 <h2>When something breaks — how to handle it</h2>
 
-<p>This applies to every phase. The same approach works every time:</p>
+<p>The same approach works for every error in every phase:</p>
 
 <ol>
   <li>Do not try to fix the error by editing files or rerunning commands yourself first.</li>
   <li>Copy the full error output — the complete text, not just the last line.</li>
   <li>Paste it into Claude Code and say: <strong>"This failed. Here is the error. What is the fix?"</strong></li>
-  <li>Claude Code will diagnose it and give you the exact corrective steps.</li>
+  <li>Claude Code will diagnose it and give you the exact steps.</li>
 </ol>
-
-<p>Common situations and what they usually mean:</p>
 
 <table class="prereq">
   <tr><th>What you see</th><th>What to paste to Claude Code</th></tr>
-  <tr><td><code>op read</code> returns nothing</td><td>The full terminal output plus: "op read returned empty, here is what I got"</td></tr>
-  <tr><td>SQL Server port not reachable</td><td>The nc or sqlcmd output plus: "connectivity check failed, this is the result"</td></tr>
-  <tr><td>Terraform plan has unexpected resources</td><td>The full plan output plus: "I see resources I did not expect, please explain"</td></tr>
-  <tr><td>Fivetran API returns an error code</td><td>The full API response JSON plus: "the API returned an error"</td></tr>
-  <tr><td>dbt build fails</td><td>The full dbt output including the error block plus: "dbt build failed"</td></tr>
-  <tr><td>Athena query fails</td><td>The full error message plus: "Athena returned this error"</td></tr>
+  <tr><td><code>op read</code> returns nothing</td><td>Full terminal output + "op read returned empty — my vault name is X and item name is Y"</td></tr>
+  <tr><td>SQL Server port not reachable</td><td>Full nc or sqlcmd output + "connectivity check failed"</td></tr>
+  <tr><td>Terraform plan has unexpected resources</td><td>Full plan output + "I see resources I did not expect, please explain"</td></tr>
+  <tr><td>Fivetran API returns an error code</td><td>Full API response JSON + "the API returned an error"</td></tr>
+  <tr><td>dbt compile or build fails</td><td>Full dbt output including the error block + "dbt failed"</td></tr>
+  <tr><td>Athena query fails</td><td>Full error message + "Athena returned this error"</td></tr>
+  <tr><td>sync_poll.sh exits with "failed"</td><td>The sync_state value + the Fivetran connector status JSON + "sync failed"</td></tr>
 </table>
+
+<p style="margin-top:8px;font-size:12px;color:#555;">If Claude Code cannot resolve the error within 15 minutes, the issue is likely outside your control — firewall blocking the SQL Server port, missing IAM permissions on a locked-down account, or CDC not enabled on the source database. Pause the session and escalate to whoever administers that system before continuing.</p>
 
 <!-- ═══════════════════════════════════════════ -->
 <h2>Hybrid deployment — the data-residency answer</h2>
 
-<p>Claude Code will surface this during Phase 2 as a short aside. It is the answer to the customer objection "we cannot send our data to a third-party cloud."</p>
+<p>Claude Code delivers this during Phase 2 as a short aside. It is also here for reference if a customer raises a data-residency concern during the demo.</p>
 
 <p>Fivetran Hybrid Deployment runs the data-movement agent inside the customer's own network. Fivetran's cloud plane receives only orchestration metadata — row counts, schema, sync timestamps. No customer data transits Fivetran's infrastructure.</p>
 
-<p>What stays identical: the connector configuration, the MDLS destination, the dbt pipeline, the React frontend. Hybrid deployment is a deployment mode applied in front of the same architecture you built today.</p>
+<p>What stays identical to what you built today: the connector configuration, the MDLS destination, the dbt pipeline, the React frontend. Hybrid deployment is a deployment mode, not a different architecture.</p>
 
 <div class="footer">
   <div>ODI Demo Builder — session guide. Both run simultaneously, one shares screen.</div>
