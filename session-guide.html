@@ -49,7 +49,9 @@
 
 <div class="both">Both of you — open a terminal in the directory where you want the demo project created. Run <code>claude</code> from there. Every file Claude Code generates lands relative to that directory. Keep that terminal open for the full session.</div>
 
-<div class="both">Both of you — run this full verification block before touching Claude Code. Every command should return output, not an error.
+<div class="both">Both of you — sign in to 1Password first. Running <code>op signin</code> directly will print an error telling you to use eval instead — that is expected. The correct command is:
+<pre>eval $(op signin)</pre>
+Enter your 1Password credentials when prompted. Then run the full verification block — every command should return output, not an error.
 <pre>claude whoami
 op whoami
 terraform version
@@ -60,7 +62,7 @@ jq --version
 aws sts get-caller-identity --query Account --output text
 echo "Fivetran key: ${FIVETRAN_API_KEY:0:8}..."
 echo "Fivetran secret: ${FIVETRAN_API_SECRET:0:8}..."</pre>
-If anything fails, paste the error into the Meet chat and ask Claude Code: "This command failed — how do I fix it?"
+If anything fails, paste the error into Claude Code: "This command failed — how do I fix it?"
 </div>
 
 <div class="share">One of you — share your screen on the Meet now. Keep the same person sharing for the full session. When your outputs differ, the shared screen is the reference.</div>
