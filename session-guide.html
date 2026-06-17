@@ -38,18 +38,18 @@
 <body>
 <div class="rail"></div>
 <h1>ODI Demo Builder — Session Guide</h1>
-<div class="meta">Both of you run this simultaneously &nbsp;·&nbsp; One person shares screen on the Meet so you both see results &nbsp;·&nbsp; ~3 hours &nbsp;·&nbsp; No skill install required — paste prompts directly into Claude Code</div>
+<div class="meta">~3 hours &nbsp;·&nbsp; No skill install required — paste prompts directly into Claude Code</div>
 
 <div class="howto">
-  <strong>How this works.</strong> Each phase has a prompt in a red-bordered box. Both of you paste it into your own Claude Code session at the same time. One of you shares your screen so you can compare outputs and talk through it. When Claude Code asks a question, the screen-sharer answers; the other person types the same answer into their own session. When something breaks, tell Claude Code exactly what happened and ask it to fix the issue — that is the right approach for every error in this session. <strong>Keep the same Claude Code session open for all four phases.</strong> Do not close or restart it between phases — the later prompts rely on context from earlier ones.
+  <strong>How this works.</strong> Each phase has a prompt in a red-bordered box — paste it into Claude Code. Share a screen on the Meet so results are visible to everyone. When something breaks, tell Claude Code exactly what happened and ask it to fix the issue. <strong>Keep the same Claude Code session open for all four phases.</strong> Do not close or restart it between phases — the later prompts rely on context from earlier ones.
 </div>
 
 <!-- ═══════════════════════════════════════════ -->
 <h2>Before you start <span class="timing">5 minutes</span></h2>
 
-<div class="both">Both of you — open a terminal in the directory where you want the demo project created. Run <code>claude</code> from there. Every file Claude Code generates lands relative to that directory. Keep that terminal open for the full session.</div>
+<div class="both">Open a terminal in the directory where you want the demo project created. Run <code>claude</code> from there. Every file Claude Code generates lands relative to that directory. Keep that terminal open for the full session.</div>
 
-<div class="both">Both of you — sign in to 1Password first. Running <code>op signin</code> directly will print an error telling you to use eval instead — that is expected. The correct command is:
+<div class="both">Sign in to 1Password first. Running <code>op signin</code> directly will print an error telling you to use eval instead — that is expected. The correct command is:
 <pre>eval $(op signin)</pre>
 Enter your 1Password credentials when prompted. Then run the full verification block — every command should return output, not an error.
 <pre>claude whoami
@@ -65,9 +65,9 @@ echo "Fivetran secret: ${FIVETRAN_API_SECRET:0:8}..."</pre>
 If anything fails, paste the error into Claude Code: "This command failed — how do I fix it?"
 </div>
 
-<div class="share">One of you — share your screen on the Meet now. Keep the same person sharing for the full session. When your outputs differ, the shared screen is the reference.</div>
+<div class="share">Share your screen on the Meet now. Keep the same person sharing for the full session. When your outputs differ, the shared screen is the reference.</div>
 
-<div class="both">Both of you — agree on these three things before pasting any prompt. Write them down or paste into the Meet chat so you both have them.
+<div class="both">Agree on these three things before pasting any prompt. Write them down or paste into the Meet chat.
 <ol>
   <li><strong>Industry vertical and fictional company name.</strong> The name must not be a real company. Examples that work: Aldermoor Systems, Crestfield Analytics, Vantage Meridian. Claude Code will validate your choice.</li>
   <li><strong>Buyer persona</strong> — CDO, CIO, or Head of Data Engineering. This shapes the frontend copy.</li>
@@ -116,7 +116,7 @@ Ask for all five now. Do not start any infrastructure work until you have them.<
 <h2>Phase 2 — Provision <span class="timing">target: 60 minutes</span></h2>
 <div class="phase-badge">PHASE 2 — PROVISION</div>
 
-<div class="share">Before pasting the Phase 2 prompt, the person sharing screen: go to fivetran.com and start creating a new MDLS destination. Work through the wizard until you see both values: the <strong>Fivetran AWS account ID</strong> and the <strong>External ID</strong>. The External ID appears mid-wizard after you name the destination — not on the first screen. Copy both values and share them in the Meet chat. Both of you need them for Terraform.</div>
+<div class="share">Before pasting the Phase 2 prompt, go to fivetran.com and start creating a new MDLS destination. Work through the wizard until you see both values: the <strong>Fivetran AWS account ID</strong> and the <strong>External ID</strong>. The External ID appears mid-wizard after you name the destination — not on the first screen. Copy both values — you need them for Terraform.</div>
 
 <div class="prompt">This continues the Phase 1 conversation. Use the demo slug, company name, SQL Server credentials, update method, AWS region, and S3 bucket prefix already established above.
 
@@ -190,7 +190,7 @@ Ask me about primary keys and grain before writing any SQL. If you have more tha
 
 <p>Claude Code will ask about column structure before generating SQL. Answer based on your knowledge of the source data. If you have many tables, narrow to 3-4 before starting Phase 3 to keep this phase within the time target.</p>
 
-<div class="both">When Claude Code applies the content rules, both of you review on the shared screen: no raw schema or table names in any UI string, fictional company name consistent, pipeline.json has a real fivetran.com <code>deep_link</code>.</div>
+<div class="both">When Claude Code applies the content rules, review on the shared screen: no raw schema or table names in any UI string, fictional company name consistent, pipeline.json has a real fivetran.com <code>deep_link</code>.</div>
 
 <div class="ok">Phase 3 done when: dbt compile and dbt ls pass, React shell generated, content rules confirmed.</div>
 
